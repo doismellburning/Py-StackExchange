@@ -1,4 +1,5 @@
 import logging
+import sys
 
 import stackexchange, unittest
 import stackexchange.sites as stacksites
@@ -8,6 +9,14 @@ ANSWER_ID = 98
 USER_ID = 23901
 
 _l = logging.getLogger(__name__)
+
+if sys.version < '3':
+	import codecs
+	def u(x):
+		return codecs.unicode_escape_decode(x)[0]
+else:
+	def u(x):
+		return x
 
 def _setUp(self):
 	self.site = stackexchange.Site(stackexchange.StackOverflow, '1_9Gj-egW0q_k1JaweDG8Q')
@@ -29,7 +38,7 @@ class DataTests(unittest.TestCase):
 
 	def test_fetch_question(self):
 		s = self.site.question(QUESTION_ID)
-		self.assertEqual(s.title, u"When setting a form's opacity should I use a decimal or double?")
+		self.assertEqual(s.title, u("When setting a form's opacity should I use a decimal or double?"))
 
 	def test_fetch_answer(self):
 		s = self.site.answer(ANSWER_ID)
